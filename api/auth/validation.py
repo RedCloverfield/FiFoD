@@ -1,12 +1,15 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..core.exceptions import ObjectAlreadyExists
-from .repository import AuthRepository
+from .repository import UserRepository
 
 
-class AuthValidator:
+class UserValidator:
+    '''
+    Валидатор операций с пользователями.
+    '''
 
-    def __init__(self, repository: AuthRepository):
+    def __init__(self, repository: UserRepository):
         self._repository = repository
 
     @property
@@ -16,6 +19,18 @@ class AuthValidator:
     async def validate_user_existance(
         self, username: str, session: AsyncSession
     ) -> None:
+        '''
+        Проверяет, что пользователь с указанным никнеймом не существует.
+
+        Args:
+            username (str): Никнейм пользователя.
+            session (AsyncSession): Асинхронная сессия для работы с базой
+             данных.
+
+        Raises:
+            ObjectAlreadyExists: Ошибка, если пользователь с указанным
+             никнеймом уже существует.
+        '''
         if await self.repository.get_by(
             session=session, username=username
         ):

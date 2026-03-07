@@ -3,8 +3,7 @@ from typing import Any
 from fastapi import HTTPException, status
 import httpx
 
-from ..config import settings
-from ..devices.schemas import DeviceDTO
+from ..core.config import settings
 
 
 class ExternalAPIClient:

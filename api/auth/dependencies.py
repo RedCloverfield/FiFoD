@@ -7,15 +7,22 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ..core.exceptions import AuthenticationError
 from ..db.session import get_session_factory
 from .models import User
-from .repository import AuthRepository
-from .service import AuthService
+from .repository import UserRepository
+from .service import UserService
 from .jwt import decode_token
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='auth/token')
 
 
-def get_auth_repository() -> AuthRepository:
-    return AuthRepository(model=User)
+def get_auth_repository() -> UserRepository:
+    '''
+    Создает экземпляр репозитория `AuthRepository`.
+
+    Returns:
+        AuthRepository: Экземпляр репозитория `AuthRepository`
+        для работы с моделью `User`.
+    '''
+    return UserRepository(model=User)
 
 
 def get_auth_service(
@@ -23,20 +30,47 @@ def get_auth_service(
         Callable[[], AsyncSession], Depends(get_session_factory)
         ],
     repository: Annotated[
-        AuthRepository, Depends(get_auth_repository)
+        UserRepository, Depends(get_auth_repository)
     ]
-) -> AuthService:
-    return AuthService(
+) -> UserService:
+    '''
+    Создает экземпляр сервиса `AuthService`.
+
+    Args:
+        session_factory (Annotated[ Callable[[], AsyncSession], Depends): Фабрика сессий.
+        repository (Annotated[ AttachmentRepository, Depends): Класс `AuthRepository`.
+
+    Returns:
+        AuthService: Экземпляр сервиса `AuthService` для управления
+         аутентифкацией и авторизацией.
+    '''
+    return UserService(
         session_factory=session_factory,
         repository=repository
     )
 
 
 async def get_current_user(
-    token: Annotated[str, Depends(oauth2_scheme)],
-    service: Annotated[AuthService, Depends(get_auth_service)]
+    access_token: Annotated[str, Depends(oauth2_scheme)],
+    service: Annotated[UserService, Depends(get_auth_service)]
 ) -> User:
-    payload = decode_token(token)
+    '''
+    Получает пользователя из никнейма, переданного в JWT Access токене
+    и возвращает его.
+
+    Args:
+        token (Annotated[str, Depends): JWT Access токен.
+        service (Annotated[AuthService, Depends): Экземпляр сервиса
+         `AuthService`.
+
+    Raises:
+        AuthenticationError: Ошибка, если токен истек или возникла проблема
+         при токен содержит некорректные учетные данные.
+
+    Returns:
+        User: Пользователь.
+    '''
+    payload = decode_token(access_token)
     username: str = payload.get('sub', None)
     if username is None:
         raise AuthenticationError('Неверный токен')

@@ -11,6 +11,7 @@ from .schemas import CreateAttachmentDTO
 
 
 class AttachmentService:
+    'Сервисный слой, для осуществления операций с привязками.'
 
     def __init__(
         self,
@@ -32,6 +33,15 @@ class AttachmentService:
         self,
         new_attachment: CreateAttachmentDTO
     ) -> Attachment:
+        '''
+        Создает и возвращает привязку. Запускает фоновую задачу Celery.
+
+        Args:
+            new_attachment (CreateAttachmentDTO): Данные новой привязки.
+
+        Returns:
+            Attachment: Созданная привязка.
+        '''
         async with self.session_factory() as session:
             validator = AttachmentValidator(
                 repository=self.attachment_repository
@@ -51,23 +61,33 @@ class AttachmentService:
                 session=session,
                 obj=attachment
             )
-            task = AttachmentCreationTask(  # Celery
+            task = AttachmentCreationTask(
                 attachment_id=attachment.id
             )
-            await self.attachment_repository.create(  # Celery
+            await self.attachment_repository.create(
                 session=session,
                 obj=task
             )
             await session.commit()
-            process_attachment_task.delay(task.id)  # Celery
+            process_attachment_task.delay(task.id)
             return attachment
 
     async def get_attachments(
-        self, filter_by
+        self, filter_by_tags: str | list[str]
     ) -> list[Attachment]:
+        '''
+        Возвращает перечень привязок с возможностью фильтрации по тегам.
+
+        Args:
+            filter_by_tags (str | list[str]): Один или несколько
+             тегов для фильтрации ответа.
+
+        Returns:
+            list[Attachment]: Перечень привязок.
+        '''
         async with self.session_factory() as session:
             attachments = await self.attachment_repository.get_attachments(
                 session=session,
-                filter_by=filter_by
+                filter_by_tags=filter_by_tags
             )
         return attachments

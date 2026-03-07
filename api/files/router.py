@@ -10,7 +10,8 @@ router = APIRouter()
 
 
 @router.get(
-    '/',
+    '',
+    summary='Ресурс для получения файлов, хранимых на сервере'
 )
 async def get_files(
     service: Annotated[FileService, Depends(get_file_service)]
@@ -19,7 +20,8 @@ async def get_files(
 
 
 @router.post(
-    '/',
+    '',
+    summary='Ресурс для загрузки файла на сервер'
 )
 async def post_file(
     service: Annotated[FileService, Depends(get_file_service)],

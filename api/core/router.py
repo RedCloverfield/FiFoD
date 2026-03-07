@@ -1,8 +1,8 @@
-from fastapi import APIRouter, status
-from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi import APIRouter
+from fastapi.responses import RedirectResponse
 
 from ..core.schemas import SuccessResponse
-from ..config import settings
+from .config import settings
 
 router = APIRouter()
 
@@ -11,7 +11,7 @@ router = APIRouter()
     '/',
     summary=(
         'Ресурс для редиректа на Swagger документацию при переходе на '
-        'эндпоинт api/v1/'
+        'эндпоинт /'
     ),
     include_in_schema=False
 )
@@ -22,7 +22,7 @@ def index() -> RedirectResponse:
 
 @router.get(
     '/healthcheck',
-    summary='Проверка состояния работоспособности сервиса',
+    summary='Ресурс для проверки состояния работоспособности сервиса',
 )
 def healthcheck(
 ) -> SuccessResponse:

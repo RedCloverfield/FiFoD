@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine
 )
 
-from ..config import settings
+from ..core.config import settings
 
 engine = create_async_engine(settings.postgres_url)
 
@@ -18,4 +18,10 @@ session_factory = async_sessionmaker(
 
 
 def get_session_factory() -> Callable[[], AsyncSession]:
+    '''
+    Возвращает фабрику SQLAlchemy сессий.
+
+    Returns:
+        Callable[[], AsyncSession]: Асинхронная Фабрика сессий.
+    '''
     return session_factory

@@ -15,6 +15,17 @@ def add_exception_handlers(app: FastAPI):
         request: Request,
         exc: HTTPStatusError
     ) -> JSONResponse:
+        '''
+        Обработчик 400-ых и 500-ых HTTP статусов ответа, возникших при
+        запросах клиента библиотеки httpx к внешним источникам.
+
+        Args:
+            request (Request): Данные HTTP запроса.
+            exc (HTTPStatusError): Объект ошибки.
+
+        Returns:
+            JSONResponse: Информация об ошибке в формате JSON.
+        '''
         error = ErrorResponse(
             error=ErrorDetail(
                 message=exc.response.json().get('message'),
@@ -32,6 +43,16 @@ def add_exception_handlers(app: FastAPI):
         request: Request,
         exc: BaseAPIException
     ) -> JSONResponse:
+        '''
+        Обработчик ошибок, возникщих внутри приложения.
+
+        Args:
+            request (Request): Данные HTTP запроса.
+            exc (HTTPStatusError): Объект ошибки.
+
+        Returns:
+            JSONResponse: Информация об ошибке в формате JSON.
+        '''
         return JSONResponse(
             status_code=exc.status_code,
             content=exc.to_dict()
@@ -42,6 +63,18 @@ def add_exception_handlers(app: FastAPI):
         request: Request,
         exc: ResponseValidationError
     ):
+        '''
+        Обработчик ошибок валидации ответа сервера. К подобным ошибкам
+        относятся, например, отсутсвующие ожидаемы поля в JSON ответе
+        или их неверный тип.
+
+        Args:
+            request (Request): Данные HTTP запроса.
+            exc (HTTPStatusError): Объект ошибки.
+
+        Returns:
+            JSONResponse: Информация об ошибке в формате JSON.
+        '''
         error = ErrorResponse(
             error=ErrorDetail(
                 message='Ошибка валидации',
@@ -59,6 +92,16 @@ def add_exception_handlers(app: FastAPI):
         request: Request,
         exc: Exception
     ):
+        '''
+        Обработчик непредвиденных ошибок, возникших при работе сервера.
+
+        Args:
+            request (Request): Данные HTTP запроса.
+            exc (HTTPStatusError): Объект ошибки.
+
+        Returns:
+            JSONResponse: Информация об ошибке в формате JSON.
+        '''
         error = ErrorResponse(
             error=ErrorDetail(
                 message=(
@@ -78,6 +121,16 @@ def add_exception_handlers(app: FastAPI):
         request: Request,
         exc: ExpiredSignatureError
     ):
+        '''
+        Обработчик ошибки просроченного JWT токена.
+
+        Args:
+            request (Request): Данные HTTP запроса.
+            exc (HTTPStatusError): Объект ошибки.
+
+        Returns:
+            JSONResponse: Информация об ошибке в формате JSON.
+        '''
         error = ErrorResponse(
             error=ErrorDetail(
                 message='Токен истек',
@@ -94,6 +147,16 @@ def add_exception_handlers(app: FastAPI):
         request: Request,
         exc: JWTError
     ):
+        '''
+        Обработчик ошибок, возникающих при декодировании JWT токена.
+
+        Args:
+            request (Request): Данные HTTP запроса.
+            exc (HTTPStatusError): Объект ошибки.
+
+        Returns:
+            JSONResponse: Информация об ошибке в формате JSON.
+        '''
         error = ErrorResponse(
             error=ErrorDetail(
                 message='Предоставлены неверные учетные данные',

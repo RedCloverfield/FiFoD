@@ -1,16 +1,13 @@
-from sqlalchemy import Enum, ForeignKey
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 
-from ...db.declarative_base import Base
-from ..enums import TaskStatus
+from ..models import TaskBaseModel
 
 
-class AttachmentCreationTask(Base):
+class AttachmentCreationTask(TaskBaseModel):
+    '''
+    Модель Celery задач, запущенных при операциях с привязками.
+    '''
     attachment_id: Mapped[int] = mapped_column(
         ForeignKey('attachment.id', ondelete='CASCADE')
-    )
-    status: Mapped[TaskStatus] = mapped_column(
-        Enum(TaskStatus),
-        default=TaskStatus.PENDING,
-        nullable=False
     )

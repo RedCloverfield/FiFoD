@@ -3,18 +3,21 @@ from typing import Callable
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .models import User
-from .repository import AuthRepository
-from .validation import AuthValidator
+from .repository import UserRepository
+from .validation import UserValidator
 from .schemas import UserCreateDTO
 from ..core.security import hash_password
 
 
-class AuthService:
+class UserService:
+    '''
+    Сервисный слой, для осуществления операций с пользователями.
+    '''
 
     def __init__(
         self,
         session_factory: Callable[[], AsyncSession],
-        repository: AuthRepository
+        repository: UserRepository
     ):
         self._session_factory = session_factory
         self._repository = repository
@@ -30,8 +33,17 @@ class AuthService:
     async def create_user(
         self, user_data: UserCreateDTO
     ) -> User:
+        '''
+        Создает и возвращает пользователя.
+
+        Args:
+            user_data (UserCreateDTO): Данные нового пользователя.
+
+        Returns:
+            User: Новый пользователь.
+        '''
         async with self.session_factory() as session:
-            validator = AuthValidator(repository=self.auth_repository)
+            validator = UserValidator(repository=self.auth_repository)
             await validator.validate_user_existance(
                 username=user_data.username, session=session
             )
@@ -50,6 +62,15 @@ class AuthService:
             return user
 
     async def get_user_by_username(self, username: str) -> User:
+        '''
+        Получает и возвращает пользователя по никнейму.
+
+        Args:
+            username (str): Никнейм пользователя.
+
+        Returns:
+            User: Пользователь.
+        '''
         async with self.session_factory() as session:
             user = await self.auth_repository.get_by(
                 session=session,

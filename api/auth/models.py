@@ -4,6 +4,9 @@ from ..db.declarative_base import Base
 
 
 class User(Base):
+    '''
+    Модель пользователей.
+    '''
     username: Mapped[str] = mapped_column(
         String, unique=True, nullable=False, index=True
         )

@@ -10,11 +10,12 @@ router = APIRouter()
 
 
 @router.post(
-    '/',
+    '',
     status_code=status.HTTP_201_CREATED,
-    response_model=AttachmentDTO
+    response_model=AttachmentDTO,
+    summary='Ресурс для создания привязки файлов к устройству'
 )
-async def post_attachments(
+async def post_attachment(
     new_attachment: CreateAttachmentDTO,
     service: Annotated[AttachmentService, Depends(get_attachment_service)]
 ):
@@ -22,13 +23,14 @@ async def post_attachments(
 
 
 @router.get(
-    '/',
-    response_model=list[AttachmentDTO]
+    '',
+    response_model=list[AttachmentDTO],
+    summary='Ресурс для получения всех привязок'
 )
 async def get_attachments(
     service: Annotated[AttachmentService, Depends(get_attachment_service)],
     tag: list[str] | None = Query(None)
 ):
     return await service.get_attachments(
-        filter_by=tag
+        filter_by_tags=tag
     )

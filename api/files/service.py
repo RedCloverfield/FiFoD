@@ -14,7 +14,7 @@ class FileService:
 
     async def upload_file(
         self, uploaded_file: UploadFile
-    ):
+    ) -> SuccessResponse:
         validator = FileValidator()
         await validator.validate_directory_existance(
             directory=FILES_STORAGE_PATH

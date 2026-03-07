@@ -4,12 +4,12 @@ from fastapi import APIRouter, Depends, status
 from fastapi.security import OAuth2PasswordRequestForm
 
 from ..core.exceptions import AuthenticationError
-from ..core.schemas import Token
+from ..core.schemas import AccessToken
 from .dependencies import get_auth_service
 from .enums import TokenType
 from .schemas import UserCreateDTO, UserDTO
 from ..core.security import verify_password
-from .service import AuthService
+from .service import UserService
 from .jwt import create_access_token
 
 router = APIRouter()
@@ -18,22 +18,24 @@ router = APIRouter()
 @router.post(
     '/register-user',
     status_code=status.HTTP_201_CREATED,
-    response_model=UserDTO
+    response_model=UserDTO,
+    summary='Ресурс для создания пользователя'
 )
 async def register_user(
     user_data: UserCreateDTO,
-    service: Annotated[AuthService, Depends(get_auth_service)]
+    service: Annotated[UserService, Depends(get_auth_service)]
 ):
     return await service.create_user(user_data=user_data)
 
 
 @router.post(
-    '/token'
+    '/token',
+    summary='Ресурс для получения JWT Access токена'
 )
 async def login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-    service: Annotated[AuthService, Depends(get_auth_service)]
-) -> Token:
+    service: Annotated[UserService, Depends(get_auth_service)]
+) -> AccessToken:
     user = await service.get_user_by_username(username=form_data.username)
     if not user or not verify_password(
         password=form_data.password,
@@ -41,7 +43,7 @@ async def login(
     ):
         raise AuthenticationError('Неверный логин или пароль')
     access_token = create_access_token({'sub': user.username})
-    return Token(
+    return AccessToken(
         access_token=access_token,
         token_type=TokenType.BEARER
     )
