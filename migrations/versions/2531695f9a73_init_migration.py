@@ -1,8 +1,8 @@
 """Init migration
 
-Revision ID: adbaf24e286d
+Revision ID: 2531695f9a73
 Revises: 
-Create Date: 2026-03-05 22:26:15.372172
+Create Date: 2026-03-07 04:49:20.636596
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = 'adbaf24e286d'
+revision: str = '2531695f9a73'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -30,7 +30,7 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('deviceId', 'fileNames', name='unique_attachment_constraint')
     )
-    op.create_index('idx_attachments_tags', 'attachment', ['tags'], unique=False, postgresql_using='gin')
+    op.create_index('ix_attachment_tags', 'attachment', ['tags'], unique=False, postgresql_using='gin')
     op.create_table('user',
     sa.Column('username', sa.String(), nullable=False),
     sa.Column('hashed_password', sa.String(), nullable=False),
@@ -54,6 +54,6 @@ def downgrade() -> None:
     op.drop_table('attachmentcreationtask')
     op.drop_index(op.f('ix_user_username'), table_name='user')
     op.drop_table('user')
-    op.drop_index('idx_attachments_tags', table_name='attachment', postgresql_using='gin')
+    op.drop_index('ix_attachment_tags', table_name='attachment', postgresql_using='gin')
     op.drop_table('attachment')
     # ### end Alembic commands ###
