@@ -16,11 +16,11 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl='auth/token')
 
 def get_auth_repository() -> UserRepository:
     '''
-    Создает экземпляр репозитория `AuthRepository`.
+    Создает экземпляр репозитория :class:`UserRepository`.
 
     Returns:
-        AuthRepository: Экземпляр репозитория `AuthRepository`
-        для работы с моделью `User`.
+        AuthRepository: Экземпляр репозитория :class:`UserRepository`
+         для работы с моделью :class:`User`.
     '''
     return UserRepository(model=User)
 
@@ -34,14 +34,16 @@ def get_auth_service(
     ]
 ) -> UserService:
     '''
-    Создает экземпляр сервиса `AuthService`.
+    Создает экземпляр сервиса :class:`UserService`.
 
     Args:
-        session_factory (Annotated[ Callable[[], AsyncSession], Depends): Фабрика сессий.
-        repository (Annotated[ AttachmentRepository, Depends): Класс `AuthRepository`.
+        session_factory (Annotated[ Callable[[], AsyncSession], Depends):
+         Фабрика сессий.
+        repository (Annotated[ AttachmentRepository, Depends): Класс
+         :class:`UserRepository`.
 
     Returns:
-        AuthService: Экземпляр сервиса `AuthService` для управления
+        UserService: Экземпляр сервиса :class:`UserService` для управления
          аутентифкацией и авторизацией.
     '''
     return UserService(
@@ -61,11 +63,11 @@ async def get_current_user(
     Args:
         token (Annotated[str, Depends): JWT Access токен.
         service (Annotated[AuthService, Depends): Экземпляр сервиса
-         `AuthService`.
+         :class:`UserService`.
 
     Raises:
-        AuthenticationError: Ошибка, если токен истек или возникла проблема
-         при токен содержит некорректные учетные данные.
+        AuthenticationError: Ошибка, если токен истек или токен содержит
+         некорректные учетные данные.
 
     Returns:
         User: Пользователь.

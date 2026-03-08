@@ -6,6 +6,9 @@ from .enums import TaskStatus
 
 
 class TaskBaseModel(Base):
+    """
+    Базовая модель Celery задач.
+    """
     __abstract__ = True
 
     status: Mapped[TaskStatus] = mapped_column(

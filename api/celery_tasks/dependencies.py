@@ -14,11 +14,11 @@ def get_celery_tasks_service(
 ):
     '''
     Объявляет и возвращает функцию, для создания экземпляра класса
-    `CeleryTasksService`.
+    :class:`CeleryTasksService`.
 
     Args:
         repository_construct (Callable[[], BaseRepository]): Класс
-         репозитория наследованный от `BaseRepository`.
+         репозитория наследованный от :class:`BaseRepository`.
     '''
     def construct_celery_tasks_service(
         session_factory: Annotated[
@@ -29,17 +29,17 @@ def get_celery_tasks_service(
         ]
     ) -> CeleryTasksService:
         '''
-        Создает экземпляр сервиса `CeleryTasksService`.
+        Создает экземпляр сервиса :class:`CeleryTasksService`.
 
         Args:
             session_factory (Annotated[ Callable[[], AsyncSession], Depends):
              Фабрика сессий.
             repository (Annotated[ AttachmentRepository, Depends): Класс
-             `CeleryTasksRepository`.
+             :class:`CeleryTasksRepository`.
 
         Returns:
-            CeleryTasksService: Экземпляр сервиса `CeleryTasksService` для
-             управления задачами Celery.
+            CeleryTasksService: Экземпляр сервиса :class:`CeleryTasksService`
+             для управления задачами Celery.
         '''
         return CeleryTasksService(
             session_factory=session_factory,

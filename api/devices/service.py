@@ -1,12 +1,11 @@
-from typing import Callable
-
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from .schemas import DeviceDTO
 from ..infrastructure.external_api_client import ExternalAPIClient
 
 
 class DeviceService:
+    '''
+    Сервисный слой, для осуществления операций с устройствами.
+    '''
 
     def __init__(
         self,

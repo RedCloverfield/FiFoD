@@ -16,7 +16,7 @@ router = APIRouter()
 async def get_files(
     service: Annotated[FileService, Depends(get_file_service)]
 ) -> list[FileInfoDTO]:
-    return await service.get_files()
+    return await service.get_image_files()
 
 
 @router.post(

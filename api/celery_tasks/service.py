@@ -36,7 +36,7 @@ class CeleryTasksService:
 
         Returns:
             Sequence[T]: Список моделей конкретной Celery задачи,
-             наследованной от класса `TaskBaseModel`.
+             наследованной от класса :class:`TaskBaseModel`.
         '''
         async with self.session_factory() as session:
             tasks = await self.celery_tasks_repository.get_all(
@@ -57,7 +57,7 @@ class CeleryTasksService:
 
         Returns:
             T: Экземпляр Celery задачи, унаследованной от класса
-             `TaskBaseModel`.
+             :class:`TaskBaseModel`.
         '''
         async with self.session_factory() as session:
             task = await self.celery_tasks_repository.get_by(
