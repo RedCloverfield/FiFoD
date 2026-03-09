@@ -10,7 +10,7 @@
 * просмотр созданных привязок;
 * получение статуса фоновых задач, запущенных при создании привязок.
 
-Пользовательский интерфейс сервиса — Swagger документация, позволяющая осуществлять все вышеуказанные операции. 
+Пользовательский интерфейс сервиса — Swagger документация, позволяющая осуществлять все вышеуказанные операции. Для осуществления операций необходимо зарегистрироваться в системе, воспользовавшись эндпоинтом */users/register-user* и указав учетные данные. После этого необходимо пройти аутентификацию с использованием тех же учетных данных.
 
 ## Стэк используемых технологий
 [![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://www.python.org/)
@@ -45,6 +45,7 @@ cd FiFoD
 SECRET_KEY - секретный ключ проекта
 ALGORITHM - алгоритм шифрования ключа
 ACCESS_TOKEN_EXPIRE_MINUTES - срок действия JWT Access токена в минутах
+REFRESH_TOKEN_EXPIRE_MINUTES - срок действия JWT Refresh токена в минутах
 
 # External API settings
 EXTERNAL_API_TOKEN - Bearer токен внешнего API для получения списка устройств
@@ -54,12 +55,12 @@ EXTERNAL_API_URL - URL внешнего API
 POSTGRES_PASSWORD - пароль базы данных PostgreSQL
 POSTGRES_USER - имя пользователя базы данных PostgreSQL
 POSTGRES_DB - название базы данных PostgreSQL
-POSTGRES_HOSTNAME - имя хоста, на котором развернута база данных PostgreSQL
+POSTGRES_HOSTNAME - хост, на котором развернута база данных PostgreSQL
 
 # Redis settings
 REDIS_USER - имя пользователя базы данных Redis
 REDIS_PASSWORD - пароль базы данных Redis
-REDIS_HOSTNAME - имя хоста, на котором развернута база данных Redis
+REDIS_HOSTNAME - хост, на котором развернута база данных Redis
 REDIS_DB_BROKER - номерное название базы базы данных Redis, выступающей брокером сообщений для Celery
 REDIS_DB_RESULT - номерное название базы базы данных Redis, выступающей бэкендом для Celery
 
