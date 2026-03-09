@@ -2,8 +2,6 @@ from typing import Any
 
 from pydantic import BaseModel
 
-from ..auth.enums import TokenType
-
 
 class BaseResponse(BaseModel):
     '''
@@ -32,11 +30,3 @@ class ErrorResponse(BaseModel):
     Модель ответа, содержащего ошибку.
     '''
     error: ErrorDetail
-
-
-class AccessToken(BaseModel):
-    '''
-    Модель ответа, содержащего JWT Access токен, а также информацию о нем.
-    '''
-    access_token: str
-    token_type: TokenType

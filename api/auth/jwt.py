@@ -2,22 +2,22 @@ from datetime import datetime, timedelta, timezone
 
 from jose import jwt
 
-from ..core.config import settings
+from ..config import settings
 
 
-def create_access_token(data: dict) -> str:
+def create_token(data: dict, expire_delta: int) -> str:
     '''
-    Создает и возвращает JWT Access токен с переданными данными.
+    Создает и возвращает JWTтокен с переданными данными.
 
     Args:
         data (dict): Данные для передачи в токен.
 
     Returns:
-        str: JWT Access токен
+        str: JWT токен.
     '''
     to_encode = data.copy()
     expire_time = datetime.now(timezone.utc) + timedelta(
-        minutes=settings.access_token_expire_minutes
+        minutes=expire_delta
     )
     to_encode.update({'exp': expire_time})
     return jwt.encode(

@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     secret_key: str
     algorithm: str
     access_token_expire_minutes: int
+    refresh_token_expire_minutes: int
     api_url: str = 'http://localhost:8000'
     project_title: str = 'FiFoD'
     postgres_hostname: str = 'localhost'

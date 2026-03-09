@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from fastapi.responses import RedirectResponse
 
 from ..core.schemas import SuccessResponse
-from .config import settings
+from ..config import settings
 
 router = APIRouter()
 

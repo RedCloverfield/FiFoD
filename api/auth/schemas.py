@@ -1,19 +1,16 @@
-from pydantic import BaseModel, ConfigDict, SecretStr
+from pydantic import BaseModel
 
 
-class UserCreateDTO(BaseModel):
+class AccessTokenDTO(BaseModel):
     '''
-    Модель для создания пользователя.
+    Модель ответа, содержащего JWT Access токен.
     '''
-    username: str
-    password: SecretStr
+    access_token: str
 
 
-class UserDTO(BaseModel):
+class TokensDTO(BaseModel):
     '''
-    Модель для отображения пользователя.
+    Модель, содержащая JWT Access и Refresh токены.
     '''
-    id: int
-    username: str
-
-    model_config = ConfigDict(from_attributes=True)
+    access_token: str
+    refresh_token: str

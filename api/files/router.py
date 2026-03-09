@@ -11,7 +11,7 @@ router = APIRouter()
 
 @router.get(
     '',
-    summary='Ресурс для получения файлов, хранимых на сервере'
+    summary='Ресурс для получения файлов изображений, хранимых на сервере'
 )
 async def get_files(
     service: Annotated[FileService, Depends(get_file_service)]

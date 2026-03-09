@@ -2,7 +2,7 @@ from typing import Any
 
 from fastapi import HTTPException, status
 from httpx import AsyncClient, Response
-from ..core.config import settings
+from ..config import settings
 
 
 class ExternalAPIClient:
@@ -26,6 +26,10 @@ class ExternalAPIClient:
             params (dict[str, Any] | None, optional): Параметры запроса. По
              умолчанию None.
             timeout (float, optional): Таймаут ответа. По умолчанию 10.0.
+
+        Raises:
+            HTTPStatusError: Ошибка, если при запросе вернулись статусы ответа
+             400-500.
 
         Returns:
             :class:`Response`: Ответ на запрос.

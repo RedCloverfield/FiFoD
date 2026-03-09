@@ -69,8 +69,8 @@ class AttachmentService:
                 obj=task
             )
             await session.commit()
-            process_attachment_task.delay(task.id)
-            return attachment
+        process_attachment_task.delay(task.id)
+        return attachment
 
     async def get_attachments(
         self, filter_by_tags: str | list[str]

@@ -5,4 +5,5 @@ class TokenType(StrEnum):
     '''
     Типы JWT токенов.
     '''
-    BEARER = 'Bearer'
+    ACCESS_TOKEN = 'access_token'
+    REFRESH_TOKEN = 'refresh_token'

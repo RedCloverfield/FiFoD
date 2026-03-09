@@ -12,7 +12,7 @@ router = APIRouter()
 @router.get(
     '',
     response_model=list[DeviceDTO],
-    summary='Ресурс для получения списка устройств'
+    summary='Ресурс для получения списка доступных устройств'
 )
 async def get_devices(
     service: Annotated[DeviceService, Depends(get_device_service)]

@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from .core.config import settings
+from .config import settings
 from .core.constants import API_ROOT_URL
 from .core.exception_handlers import add_exception_handlers
 from .core.register_routers import register_routers

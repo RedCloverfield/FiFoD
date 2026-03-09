@@ -3,10 +3,11 @@ from fastapi import Depends, FastAPI
 from ..auth.dependencies import get_current_user
 from ..auth.router import router as auth_router
 from ..attachments.router import router as attachment_router
+from ..celery_tasks.attachments.router import router as attachment_tasks_router
 from ..devices.router import router as device_router
 from ..files.router import router as file_router
 from .router import router as base_router
-from ..celery_tasks.attachments.router import router as attachment_tasks_router
+from ..users.router import router as user_router
 
 
 def register_routers(app: FastAPI):
@@ -48,4 +49,9 @@ def register_routers(app: FastAPI):
         tags=['files'],
         prefix='/files',
         dependencies=[Depends(get_current_user)]
+    )
+    app.include_router(
+        router=user_router,
+        tags=['users'],
+        prefix='/users',
     )

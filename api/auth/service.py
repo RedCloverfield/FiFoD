@@ -1,23 +1,28 @@
 from typing import Callable
 
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .models import User
-from .repository import UserRepository
-from .validation import UserValidator
-from .schemas import UserCreateDTO
-from ..core.security import hash_password
+from ..core.exceptions import AuthenticationError
+from ..core.security import verify_password
+from ..config import settings
+from .enums import TokenType
+from .schemas import TokensDTO
+from ..users.models import User
+from ..users.schemas import UserDTO
+from .repository import AuthRepository
+from .jwt import decode_token, create_token
 
 
-class UserService:
+class AuthService:
     '''
-    Сервисный слой, для осуществления операций с пользователями.
+    Сервисный слой, для осуществления операций с аутентификацей и токенами.
     '''
 
     def __init__(
         self,
         session_factory: Callable[[], AsyncSession],
-        repository: UserRepository
+        repository: AuthRepository
     ):
         self._session_factory = session_factory
         self._repository = repository
@@ -29,37 +34,6 @@ class UserService:
     @property
     def session_factory(self):
         return self._session_factory
-
-    async def create_user(
-        self, user_data: UserCreateDTO
-    ) -> User:
-        '''
-        Создает и возвращает пользователя.
-
-        Args:
-            user_data (UserCreateDTO): Данные нового пользователя.
-
-        Returns:
-            User: Новый пользователь.
-        '''
-        async with self.session_factory() as session:
-            validator = UserValidator(repository=self.auth_repository)
-            await validator.validate_user_existance(
-                username=user_data.username, session=session
-            )
-            hashed_password = hash_password(
-                user_data.password.get_secret_value()
-            )
-            user = User(
-                username=user_data.username,
-                hashed_password=hashed_password
-            )
-            await self.auth_repository.create(
-                session=session,
-                obj=user
-            )
-            await session.commit()
-            return user
 
     async def get_user_by_username(self, username: str) -> User:
         '''
@@ -77,3 +51,63 @@ class UserService:
                 username=username
             )
             return user
+
+    async def authenticate_user(
+        self, auth_data: OAuth2PasswordRequestForm
+    ) -> TokensDTO:
+        user = await self.get_user_by_username(username=auth_data.username)
+        if not user or not verify_password(
+            password=auth_data.password,
+            hashed_password=user.hashed_password
+        ):
+            raise AuthenticationError('Неверный логин или пароль')
+        access_token = create_token(
+            {
+                'sub': user.username,
+                'type': TokenType.ACCESS_TOKEN
+            },
+            expire_delta=settings.access_token_expire_minutes
+        )
+        refresh_token = create_token(
+            {
+                'sub': user.username,
+                'type': TokenType.REFRESH_TOKEN
+            },
+            expire_delta=settings.refresh_token_expire_minutes
+        )
+        return TokensDTO(
+            access_token=access_token,
+            refresh_token=refresh_token
+        )
+
+    async def get_user_from_token(
+        self, token: str, expected_token_type: TokenType
+    ):
+        payload = decode_token(token=token)
+        token_type = payload.get("type")
+        if token_type != expected_token_type:
+            raise AuthenticationError(message="Неверный тип токена")
+        username: str = payload.get('sub', None)
+        if username is None:
+            raise AuthenticationError('Неверный токен')
+        user = await self.get_user_by_username(username=username)
+        if user is None:
+            raise AuthenticationError('Неверные учетные данные')
+        return user
+
+    async def refresh_access_token(
+        self,
+        refresh_token: str,
+    ) -> str:
+        user = await self.get_user_from_token(
+            token=refresh_token,
+            expected_token_type=TokenType.REFRESH_TOKEN,
+        )
+        access_token = create_token(
+            data={
+                'sub': user.username,
+                'type': TokenType.ACCESS_TOKEN
+            },
+            expire_delta=settings.access_token_expire_minutes
+        )
+        return access_token

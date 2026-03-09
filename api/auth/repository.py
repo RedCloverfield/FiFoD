@@ -1,8 +1,8 @@
 from ..db.repository import BaseRepository
 
 
-class UserRepository(BaseRepository):
+class AuthRepository(BaseRepository):
     '''
-    Репозиторий для осуществления операций с пользователями в базе данных.
+    Репозиторий для осуществления операций с аутентификацей и токенами.
     '''
     pass
