@@ -38,7 +38,13 @@ git clone https://github.com/RedCloverfield/FiFoD.git
 ```
 cd FiFoD
 ```
-2. Создать файл .env со структурой подобной структуре файла .env.example
+2. Создать файл .env со структурой подобной структуре файла .env.example.
+
+> [!WARNING]
+> ОБРАТИТЕ ВНИМАНИЕ! Для создания пользователей необходимо обладать правами администратора. Для данной цели при инициализации проекта создается суперпользователь с учетными данными, которые будут указаны в переменных `SUPERUSER_NAME` (имя пользователя) и `SUPERUSER_PASSWORD` (пароль пользователя).
+
+> [!WARNING]
+> ОБРАТИТЕ ВНИМАНИЕ! Перед началом работы с проектом необходимо создать директорию, для хранения файлов, путь к которой затем следует указать в переменной `FILES_STORAGE_DIR`.
 
 ```
 #JWT settings
@@ -55,12 +61,16 @@ EXTERNAL_API_URL - URL внешнего API
 POSTGRES_PASSWORD - пароль базы данных PostgreSQL
 POSTGRES_USER - имя пользователя базы данных PostgreSQL
 POSTGRES_DB - название базы данных PostgreSQL
-POSTGRES_HOSTNAME - хост, на котором развернута база данных PostgreSQL
+POSTGRES_HOSTNAME - хост, на котором развернута база данных PostgreSQL (должен соответствовать названию контейнера в Docker сети)
+
+# Superuser settings
+SUPERUSER_NAME - никнейм первого суперпользователя
+SUPERUSER_PASSWORD - пароль первого суперпользователя
 
 # Redis settings
 REDIS_USER - имя пользователя базы данных Redis
 REDIS_PASSWORD - пароль базы данных Redis
-REDIS_HOSTNAME - хост, на котором развернута база данных Redis
+REDIS_HOSTNAME - хост, на котором развернута база данных Redis (должен соответствовать названию контейнера в Docker сети)
 REDIS_DB_BROKER - номерное название базы базы данных Redis, выступающей брокером сообщений для Celery
 REDIS_DB_RESULT - номерное название базы базы данных Redis, выступающей бэкендом для Celery
 
