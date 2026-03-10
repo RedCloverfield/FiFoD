@@ -7,6 +7,7 @@ class UserCreateDTO(BaseModel):
     '''
     username: str
     password: SecretStr
+    is_admin: bool = False
 
 
 class UserDTO(BaseModel):
@@ -15,5 +16,6 @@ class UserDTO(BaseModel):
     '''
     id: int
     username: str
+    is_admin: bool
 
     model_config = ConfigDict(from_attributes=True)

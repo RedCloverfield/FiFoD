@@ -55,6 +55,20 @@ class AuthService:
     async def authenticate_user(
         self, auth_data: OAuth2PasswordRequestForm
     ) -> TokensDTO:
+        '''
+        Создает пару Access, Refresh токенов для пользователя, если переданы
+        валидные учетные данные. 
+
+        Args:
+            auth_data (OAuth2PasswordRequestForm): Учетные данные
+             пользователя.
+
+        Raises:
+            AuthenticationError: Ошибка, если учетные данные не валидны.
+
+        Returns:
+            TokensDTO: Пара токенов.
+        '''
         user = await self.get_user_by_username(username=auth_data.username)
         if not user or not verify_password(
             password=auth_data.password,
@@ -82,7 +96,22 @@ class AuthService:
 
     async def get_user_from_token(
         self, token: str, expected_token_type: TokenType
-    ):
+    ) -> User:
+        '''
+        Получает никнейм пользователя из JWT токена, а затем обращается в
+        базу данных для поиска пользователя с этим никнеймом. Если
+        пользователь найден, возвращает его.
+
+        Args:
+            token (str): JWT токен.
+            expected_token_type (TokenType): Ожидаемый тип токена.
+
+        Raises:
+            AuthenticationError: Ошибка, если токен невалиден.
+
+        Returns:
+            User: Пользователь.
+        '''
         payload = decode_token(token=token)
         token_type = payload.get("type")
         if token_type != expected_token_type:
@@ -99,6 +128,15 @@ class AuthService:
         self,
         refresh_token: str,
     ) -> str:
+        '''
+        Создает новый JWT Access токен.
+
+        Args:
+            refresh_token (str): JWT Refresh токен.
+
+        Returns:
+            str: Новый JWT Access токен.
+        '''
         user = await self.get_user_from_token(
             token=refresh_token,
             expected_token_type=TokenType.REFRESH_TOKEN,

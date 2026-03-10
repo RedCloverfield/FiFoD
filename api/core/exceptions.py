@@ -37,8 +37,17 @@ class AuthenticationError(BaseAPIException):
     Ошибка аутентифкации пользователя.
     '''
     status_code = status.HTTP_401_UNAUTHORIZED
-    code = 'auth_error'
+    code = 'authentication_error'
     message = 'Ошибка аутентификации'
+
+
+class AuthorizationError(BaseAPIException):
+    '''
+    Ошибка авторизации пользователя.
+    '''
+    status_code = status.HTTP_401_UNAUTHORIZED
+    code = 'authorization_error'
+    message = 'Ошибка авторизации'
 
 
 class ObjectAlreadyExists(BaseAPIException):

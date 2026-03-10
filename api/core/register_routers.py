@@ -1,6 +1,6 @@
 from fastapi import Depends, FastAPI
 
-from ..auth.dependencies import get_current_user
+from ..auth.dependencies import get_current_admin_user, get_current_user
 from ..auth.router import router as auth_router
 from ..attachments.router import router as attachment_router
 from ..celery_tasks.attachments.router import router as attachment_tasks_router
@@ -54,4 +54,5 @@ def register_routers(app: FastAPI):
         router=user_router,
         tags=['users'],
         prefix='/users',
+        dependencies=[Depends(get_current_admin_user)]
     )

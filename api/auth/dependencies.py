@@ -4,6 +4,7 @@ from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from ..core.exceptions import AuthorizationError
 from ..db.session import get_session_factory
 from .enums import TokenType
 from .repository import AuthRepository
@@ -73,4 +74,14 @@ async def get_current_user(
     return await service.get_user_from_token(
         token=access_token,
         expected_token_type=TokenType.ACCESS_TOKEN
+    )
+
+
+async def get_current_admin_user(
+    user: Annotated[User, Depends(get_current_user)]
+) -> User:
+    if user.is_admin:
+        return user
+    raise AuthorizationError(
+        message='У вас недостаточно прав для осуществления данного действия'
     )

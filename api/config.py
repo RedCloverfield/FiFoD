@@ -16,6 +16,8 @@ class Settings(BaseSettings):
     postgres_db: str
     postgres_user: str
     postgres_password: str
+    superuser_name: str
+    superuser_password: str
     redis_db_broker: int = 0
     redis_db_result: int = 1
     redis_port: int = 6379

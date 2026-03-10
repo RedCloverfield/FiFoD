@@ -52,7 +52,8 @@ class UserService:
             )
             user = User(
                 username=user_data.username,
-                hashed_password=hashed_password
+                hashed_password=hashed_password,
+                is_admin=user_data.is_admin
             )
             await self.user_repository.create(
                 session=session,
