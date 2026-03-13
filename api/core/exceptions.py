@@ -45,7 +45,7 @@ class AuthorizationError(BaseAPIException):
     '''
     Ошибка авторизации пользователя.
     '''
-    status_code = status.HTTP_401_UNAUTHORIZED
+    status_code = status.HTTP_403_FORBIDDEN
     code = 'authorization_error'
     message = 'Ошибка авторизации'
 

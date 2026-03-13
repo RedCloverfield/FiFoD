@@ -1,6 +1,6 @@
 from typing import Annotated, Callable
 
-from fastapi import Depends
+from fastapi import Cookie, Depends  # noqa
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -54,6 +54,8 @@ def get_auth_service(
 
 async def get_current_user(
     access_token: Annotated[str, Depends(oauth2_scheme)],
+    # пример получения access токена из cookie
+    # access_token: str | None = Cookie(default=None),
     service: Annotated[AuthService, Depends(get_auth_service)]
 ) -> User:
     '''
